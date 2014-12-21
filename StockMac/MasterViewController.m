@@ -15,6 +15,7 @@
 #define kGoldPercent618     0.618
 #define kGoldPercent809     0.809
 #define kGoldPercent1618    1.618
+#define kGoldPercent3236    3.236
 
 static NSString* kStockMacPointAKey = @"StockMac.A";
 static NSString* kStockMacPointBKey = @"StockMac.B";
@@ -30,6 +31,7 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 // General view
 @property (weak) IBOutlet NSTabView *tabView;
+@property (weak) IBOutlet NSScrollView *trendContentView;
 
 // Tab 1 - Gold
 @property (weak) IBOutlet NSTextField *maxTextField;
@@ -83,10 +85,10 @@ static NSString* kUserDefaultKey = @"StockMac";
 @property (weak) IBOutlet NSTextField *valueGTextField;
 @property (weak) IBOutlet NSPopUpButton *waveStylePopUpButton;
 @property (weak) IBOutlet NSButton *wave5HelpButton;
-@property (weak) IBOutlet NSTextField *wave5ValueFRange;
 @property (weak) IBOutlet NSTextField *wave5Cost;
 @property (weak) IBOutlet NSTextField *wave5Profit;
 @property (weak) IBOutlet NSTextField *wave5ProfitPercent;
+@property (weak) IBOutlet NSTextField *wave5ValueGRange;
 
 // logic related
 @property (readonly) BOOL isAscending;
@@ -328,8 +330,6 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 - (void)handleWave2Logic
 {
-    self.valueDTooltip.hidden = YES;
-    self.valueDRange.hidden = YES;
     [self.wave2Height setStringValue:[NSString stringWithFormat:@"%.2f", self.firstWaveHeight]];
     [self.wave2Back setStringValue:@"0"];
     [self.wave2BackPercent setStringValue:@"0"];
@@ -338,34 +338,37 @@ static NSString* kUserDefaultKey = @"StockMac";
         self.valueD = 0;
         return;
     }
+    
+    NSString* lpTooltip = nil;
+    if (self.isAscending) {
+        lpTooltip = @"D = 40\% ~ 80\%";
+    }
+    else{
+        lpTooltip = @"D = 30\% ~ 95\%";
+    }
+    [self.valueDTooltip setStringValue:lpTooltip];
 
     if (self.valueD == 0) {
         // only estimate wave 2 logic
-        self.valueDTooltip.hidden = NO;
-        self.valueDRange.hidden = NO;
-        
-        NSString* lpTooltip = nil;
         NSString* lpValueDRange = nil;
         if (self.isAscending) {
-            lpTooltip = @"D = 40\% ~ 80\%";
             CGFloat min = self.valueC - self.firstWaveHeight * 0.8;
             CGFloat max = self.valueC - self.firstWaveHeight * 0.4;
             lpValueDRange = [NSString stringWithFormat:@"%.2f ~ %.2f", min, max];
         }
         else{
-            lpTooltip = @"D = 30\% ~ 95\%";
             CGFloat min = self.valueC + self.firstWaveHeight * 0.95;
             CGFloat max = self.valueC + self.firstWaveHeight * 0.3;
             lpValueDRange = [NSString stringWithFormat:@"%.2f ~ %.2f", min, max];
         }
         
-        [self.valueDTooltip setStringValue:lpTooltip];
         [self.valueDRange setStringValue:lpValueDRange];
     }
     else{
         CGFloat back = fabs(self.valueD - self.valueC);
         [self.wave2Back setStringValue:[NSString stringWithFormat:@"%.2f", back]];
         [self.wave2BackPercent setStringValue:[NSString stringWithFormat:@"%.2f", back/self.firstWaveHeight]];
+        [self.valueDRange setStringValue:@""];
     }
 }
 
@@ -476,17 +479,77 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 - (void)handleWave5Logic
 {
-    // not setting wave style, so here we only calculate min and max G value
-    if (self.waveStyle == 0) {
-        
+    [self.valueGTextField setStringValue:@"0"];
+    [self.wave5Cost setStringValue:@"0"];
+    [self.wave5Profit setStringValue:@"0"];
+    [self.wave5ValueGRange setStringValue:@"0"];
+    [self.wave5ProfitPercent setStringValue:@"0"];
+    
+    if (self.valueF == 0) {
+        return;
     }
     
+    // these 2 values stands for no wave style min and max value for G
+    CGFloat lNormalMin = 0.0f;
+    CGFloat lNormalMax = 0.0f;
+    if (self.isAscending) {
+        lNormalMin = self.valueB + kGoldPercent3236 * self.firstWaveHeight;
+        lNormalMax = self.valueC + kGoldPercent3236 * self.firstWaveHeight;
+    }
+    else{
+        lNormalMax = self.valueB - kGoldPercent3236 * self.firstWaveHeight;
+        lNormalMin = self.valueC - kGoldPercent3236 * self.firstWaveHeight;
+    }
     
+    CGFloat lSpecialMin = 0.0f;
+    CGFloat lSpecialMax = 0.0f;
+    // not setting wave style, so here we only calculate min and max G value
+    if (self.waveStyle == 1) {
+        if (self.isAscending) {
+            lSpecialMin = self.valueF + kGoldPercent618 * self.firstWaveHeight;
+            lSpecialMax = self.valueF + self.firstWaveHeight;
+        }
+        else{
+            lSpecialMin = self.valueF - self.firstWaveHeight;
+            lSpecialMax = self.valueF - kGoldPercent618 * self.firstWaveHeight;
+        }
+    }
+    else if(self.waveStyle == 2){
+        if (self.isAscending) {
+            lSpecialMin = self.valueF + kGoldPercent1618 * (self.valueE - self.valueB);
+            lSpecialMax = lSpecialMin;
+        }
+    }
+    
+    CGFloat lFinalMin = (lSpecialMin == 0) ? lNormalMin : MIN(lSpecialMin, lNormalMin);
+    CGFloat lFinalMax = (lSpecialMax == 0) ? lNormalMax : MAX(lSpecialMax, lNormalMax);
+    [self.wave5ValueGRange setStringValue:[NSString stringWithFormat:@"[%.f, %.f]", lFinalMin, lFinalMax]];
+    [self.valueGTextField setStringValue:[NSString stringWithFormat:@"%.f", (lFinalMax + lFinalMin) / 2.0]];
+    
+    // calculate the max loss
+    CGFloat lMaxLoss = 0.0f;
+    CGFloat lMinProfit = 0.0f;
+    if (self.isAscending) {
+        lMinProfit = lFinalMin - self.valueF;
+        lMaxLoss = self.valueF - MIN(self.stopValue, self.valueB);
+    }
+    else{
+        lMinProfit = self.valueF - lFinalMax;
+        lMaxLoss = MAX(self.stopValue, self.valueB) - self.valueF;
+    }
+    
+    [self.wave5Cost setStringValue:[NSString stringWithFormat:@"%.f", lMaxLoss]];
+    [self.wave5Profit setStringValue:[NSString stringWithFormat:@"%.f", lMinProfit]];
+    [self.wave5ProfitPercent setStringValue:[NSString stringWithFormat:@"%.f", lMinProfit/lMaxLoss]];
 }
 
 - (void)clearWave5Group
 {
-    
+    [self.valueGTextField setStringValue:@"0"];
+    [self.wave5Cost setStringValue:@"0"];
+    [self.wave5Profit setStringValue:@"0"];
+    [self.wave5ValueGRange setStringValue:@"0"];
+    [self.wave5ProfitPercent setStringValue:@"0"];
 }
 
 #pragma mark - Run Gold Percent Logic

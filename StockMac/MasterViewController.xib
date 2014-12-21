@@ -24,6 +24,7 @@
                 <outlet property="rangeTextField" destination="sHc-zc-qLx" id="ZC7-97-8yo"/>
                 <outlet property="stopValueTextField" destination="nNL-X5-xry" id="ROU-Jc-DiC"/>
                 <outlet property="tabView" destination="rY7-57-XQW" id="kt4-bT-CyV"/>
+                <outlet property="trendContentView" destination="Qmy-yv-i0W" id="DlC-Gc-Pcc"/>
                 <outlet property="valueATextField" destination="qeh-Qd-XIw" id="VSi-UL-nAA"/>
                 <outlet property="valueBTextField" destination="CnN-27-4MU" id="8AC-Ul-kH1"/>
                 <outlet property="valueCTextField" destination="x92-OT-xJG" id="CcC-z3-v32"/>
@@ -47,7 +48,7 @@
                 <outlet property="wave5HelpButton" destination="2md-Kn-sv0" id="UMx-qO-GMy"/>
                 <outlet property="wave5Profit" destination="Vd8-My-ZsG" id="Esr-FT-6Ap"/>
                 <outlet property="wave5ProfitPercent" destination="Gbc-CA-mVD" id="EHB-lG-PHO"/>
-                <outlet property="wave5ValueFRange" destination="d5Y-5d-2Vn" id="bY2-dg-0Gn"/>
+                <outlet property="wave5ValueGRange" destination="d5Y-5d-2Vn" id="vR0-P9-ule"/>
                 <outlet property="waveStylePopUpButton" destination="ZKM-Zg-TYT" id="gtM-in-yBl"/>
             </connections>
         </customObject>
@@ -544,7 +545,7 @@
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5WW-pj-hCq">
                                                                         <rect key="frame" x="18" y="39" width="72" height="21"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" title="Cost = " id="UX9-ag-ITB">
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" title="Loss = " id="UX9-ag-ITB">
                                                                             <font key="font" metaFont="system"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -607,7 +608,7 @@
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="UJ2-G9-c7M">
                                                                         <rect key="frame" x="182" y="28" width="98" height="21"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit/Cost" id="9tU-cm-OmS">
+                                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit/Loss" id="9tU-cm-OmS">
                                                                             <font key="font" metaFont="system"/>
                                                                             <color key="textColor" red="0.74286111269999999" green="0.097971792789999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -693,16 +694,16 @@
                                                                             <color key="backgroundColor" red="0.79820315659999996" green="1" blue="0.82416386559999999" alpha="1" colorSpace="calibratedRGB"/>
                                                                         </textFieldCell>
                                                                     </textField>
-                                                                    <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Xvg-bN-xIQ">
-                                                                        <rect key="frame" x="18" y="14" width="151" height="21"/>
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Xvg-bN-xIQ">
+                                                                        <rect key="frame" x="18" y="12" width="151" height="23"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" title="0" drawsBackground="YES" id="ei5-ZL-o6F">
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="ei5-ZL-o6F">
                                                                             <font key="font" metaFont="system" size="16"/>
                                                                             <color key="textColor" red="1" green="0.14645393549999999" blue="0.2164003018" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                         </textFieldCell>
                                                                     </textField>
-                                                                    <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="vjb-X7-Rqv">
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="vjb-X7-Rqv">
                                                                         <rect key="frame" x="18" y="39" width="151" height="21"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="D = 30% ~ 95%" id="aTW-q2-htd">
@@ -799,7 +800,7 @@
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BnM-E8-wUL">
                                                                         <rect key="frame" x="18" y="39" width="72" height="21"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" title="Cost = " id="3BD-c4-ZVX">
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="right" title="Loss = " id="3BD-c4-ZVX">
                                                                             <font key="font" metaFont="system"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -867,7 +868,7 @@
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="TXF-Rg-kGG">
                                                                         <rect key="frame" x="171" y="14" width="132" height="21"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit Percent" id="vVk-tc-6LU">
+                                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit/Loss" id="vVk-tc-6LU">
                                                                             <font key="font" metaFont="system"/>
                                                                             <color key="textColor" red="0.74286111269999999" green="0.097971792789999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -905,7 +906,7 @@
                                             <rect key="frame" x="1" y="80" width="166" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="mCQ-Ki-WrR">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="mCQ-Ki-WrR">
                                             <rect key="frame" x="167" y="1" width="15" height="79"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
