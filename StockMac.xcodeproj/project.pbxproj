@@ -484,6 +484,7 @@
 				A6FBD4241A45A0C300D14F0C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A6FBD4251A45A0C300D14F0C /* Build configuration list for PBXNativeTarget "StockMacTests" */ = {
 			isa = XCConfigurationList;
@@ -492,6 +493,7 @@
 				A6FBD4271A45A0C300D14F0C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -20,8 +20,10 @@ static NSString* kStockMacPointAKey = @"StockMac.A";
 static NSString* kStockMacPointBKey = @"StockMac.B";
 static NSString* kStockMacPointCKey = @"SotckMac.C";
 static NSString* kStockMacPointDKey = @"StockMac.D";
+static NSString* kStockMacPointEKey = @"StockMac.E";
+static NSString* kStockMacPointFKey = @"StockMac.F";
 static NSString* kStockMacStopKey   = @"StockMac.Stop";
-static NSString* kStockMacWave4LowestPointKey = @"StockMac.Wave4LowestPoint";
+static NSString* kStockMacWaveStyleKey = @"StockMac.WaveStyle";
 static NSString* kUserDefaultKey = @"StockMac";
 
 @interface MasterViewController ()
@@ -30,7 +32,6 @@ static NSString* kUserDefaultKey = @"StockMac";
 @property (weak) IBOutlet NSTabView *tabView;
 
 // Tab 1 - Gold
-
 @property (weak) IBOutlet NSTextField *maxTextField;
 @property (weak) IBOutlet NSTextField *minTextField;
 @property (weak) IBOutlet NSTextField *midTextField;
@@ -56,8 +57,9 @@ static NSString* kUserDefaultKey = @"StockMac";
 @property (weak) IBOutlet NSTextField *valueATextField;
 @property (weak) IBOutlet NSTextField *valueBTextField;
 @property (weak) IBOutlet NSTextField *valueCTextField;
-@property (weak) IBOutlet NSTextField *stopTextField;
+@property (weak) IBOutlet NSTextField *stopValueTextField;
 
+// the second wave group
 @property (weak) IBOutlet NSTextField *valueDTextField;
 @property (weak) IBOutlet NSTextField *wave2Height;     // actually it is the first wave
 @property (weak) IBOutlet NSTextField *wave2Back;
@@ -65,36 +67,139 @@ static NSString* kUserDefaultKey = @"StockMac";
 @property (weak) IBOutlet NSTextField *valueDTooltip;
 @property (weak) IBOutlet NSTextField *valueDRange;
 
+// the third wave group
 @property (weak) IBOutlet NSTextField *valueETextField;
 @property (weak) IBOutlet NSTextField *wave3Height;
 @property (weak) IBOutlet NSTextField *wave3Cost;
 @property (weak) IBOutlet NSTextField *wave3Profit;
 @property (weak) IBOutlet NSTextField *wave3ProfitPercent;
 
+// the forth wave group
+@property (weak) IBOutlet NSTextField *valueFTextField;
+@property (weak) IBOutlet NSTextField *wave4Tooltip;
+@property (weak) IBOutlet NSTextField *wave4Back;
+
+// the fifth wave group
+@property (weak) IBOutlet NSTextField *valueGTextField;
 @property (weak) IBOutlet NSPopUpButton *waveStylePopUpButton;
 @property (weak) IBOutlet NSButton *wave5HelpButton;
-@property (weak) IBOutlet NSTextField *wave5PreviousLowestTooltip;
-@property (weak) IBOutlet NSTextField *wave5PreviousLowestTextField;
-@property (weak) IBOutlet NSTextField *valueFTextField;
 @property (weak) IBOutlet NSTextField *wave5ValueFRange;
 @property (weak) IBOutlet NSTextField *wave5Cost;
 @property (weak) IBOutlet NSTextField *wave5Profit;
 @property (weak) IBOutlet NSTextField *wave5ProfitPercent;
 
+// logic related
 @property (readonly) BOOL isAscending;
 @property (readonly) CGFloat firstWaveHeight;
+@property (assign) CGFloat valueA;
+@property (assign) CGFloat valueB;
+@property (assign) CGFloat valueC;
+@property (assign) CGFloat valueD;
+@property (assign) CGFloat valueE;
+@property (assign) CGFloat valueF;
+@property (assign) CGFloat stopValue;
+@property (assign) NSInteger waveStyle;
 
 @end
 
 @implementation MasterViewController
 
+#pragma mark - Logic Related
+- (CGFloat)valueA
+{
+    return [[self.valueATextField stringValue] floatValue];
+}
+
+- (void)setValueA:(CGFloat)valueA
+{
+    [self.valueATextField setStringValue:[NSString stringWithFormat:@"%.f", valueA]];
+}
+
+- (CGFloat)valueB
+{
+    return [[self.valueBTextField stringValue] floatValue];
+}
+
+- (void)setValueB:(CGFloat)valueB
+{
+    [self.valueBTextField setStringValue:[NSString stringWithFormat:@"%.f", valueB]];
+}
+
+- (CGFloat)valueC
+{
+    return [[self.valueCTextField stringValue] floatValue];
+}
+
+- (void)setValueC:(CGFloat)valueC
+{
+    [self.valueCTextField setStringValue:[NSString stringWithFormat:@"%.f", valueC]];
+}
+
+- (CGFloat)valueD
+{
+    return [[self.valueDTextField stringValue] floatValue];
+}
+
+- (void)setValueD:(CGFloat)valueD
+{
+    [self.valueDTextField setStringValue:[NSString stringWithFormat:@"%.f", valueD]];
+}
+
+- (CGFloat)valueE
+{
+    return [[self.valueETextField stringValue] floatValue];
+}
+
+- (void)setValueE:(CGFloat)valueE
+{
+    [self.valueETextField setStringValue:[NSString stringWithFormat:@"%.f", valueE]];
+}
+
+- (CGFloat)valueF
+{
+    return [[self.valueFTextField stringValue] floatValue];
+}
+
+- (void)setValueF:(CGFloat)valueF
+{
+    [self.valueFTextField setStringValue:[NSString stringWithFormat:@"%.f", valueF]];
+}
+
+- (CGFloat)stopValue
+{
+    return [[self.stopValueTextField stringValue] floatValue];
+}
+
+- (void)setStopValue:(CGFloat)stopValue
+{
+    [self.stopValueTextField setStringValue:[NSString stringWithFormat:@"%.f", stopValue]];
+}
+
+/**
+ *  Style:
+ *  1. The Wave 3 is extension
+ *  2. The Wave 5 is extension
+ */
+- (NSInteger)waveStyle
+{
+    return (NSInteger)[self.waveStylePopUpButton indexOfItem:self.waveStylePopUpButton.selectedItem];
+}
+
+/**
+ *  Currently only support 2 types wave style
+ */
+- (void)setWaveStyle:(NSInteger)waveStyle
+{
+    if (waveStyle > 2) {
+        return;
+    }
+    [self.waveStylePopUpButton selectItemAtIndex:waveStyle];
+}
+
 // the estimated trend
 - (BOOL)isAscending
 {
-    CGFloat valueA = [[self.valueATextField stringValue] floatValue];
-    CGFloat valueB = [[self.valueBTextField stringValue] floatValue];
-    
-    if (valueA < valueB) {
+    if (self.valueA < self.valueB) {
         return NO;
     }
     else{
@@ -104,10 +209,10 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 - (CGFloat)firstWaveHeight
 {
-    CGFloat valueC = [[self.valueCTextField stringValue] floatValue];
-    CGFloat valueB = [[self.valueBTextField stringValue] floatValue];
-    return fabs(valueB - valueC);
+    return fabs(self.valueB - self.valueC);
 }
+
+#pragma mark - View Related
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -175,20 +280,24 @@ static NSString* kUserDefaultKey = @"StockMac";
 #pragma mark - Run Trend Logic
 - (void)storeRequiredValue
 {
-    CGFloat valueA = [[self.valueATextField stringValue] floatValue];
-    CGFloat valueB = [[self.valueBTextField stringValue] floatValue];
-    CGFloat valueC = [[self.valueCTextField stringValue] floatValue];
-    CGFloat valueD = [[self.valueDTextField stringValue] floatValue];
-    CGFloat valueStop = [[self.stopTextField stringValue] floatValue];
-    CGFloat wave4Lowest = [[self.wave5PreviousLowestTextField stringValue] floatValue];
+    CGFloat valueA = self.valueA;
+    CGFloat valueB = self.valueB;
+    CGFloat valueC = self.valueC;
+    CGFloat valueD = self.valueD;
+    CGFloat valueE = self.valueE;
+    CGFloat valueF = self.valueF;
+    CGFloat stopValue = self.stopValue;
+    CGFloat waveStyle = [self.waveStylePopUpButton indexOfItem:self.waveStylePopUpButton.selectedItem];
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* keys = @{kStockMacPointAKey: @(valueA),
                            kStockMacPointBKey: @(valueB),
                            kStockMacPointCKey: @(valueC),
                            kStockMacPointDKey: @(valueD),
-                           kStockMacStopKey: @(valueStop),
-                           kStockMacWave4LowestPointKey: @(wave4Lowest)};
+                           kStockMacPointEKey: @(valueE),
+                           kStockMacPointFKey: @(valueF),
+                           kStockMacStopKey: @(stopValue),
+                           kStockMacWaveStyleKey: @(waveStyle)};
     [defaults setObject:keys forKey:kUserDefaultKey];
 }
 
@@ -197,19 +306,14 @@ static NSString* kUserDefaultKey = @"StockMac";
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* lpValues = [defaults objectForKey:kUserDefaultKey];
     
-    CGFloat valueA = [[lpValues objectForKey:kStockMacPointAKey] floatValue];
-    CGFloat valueB = [[lpValues objectForKey:kStockMacPointBKey] floatValue];
-    CGFloat valueC = [[lpValues objectForKey:kStockMacPointCKey] floatValue];
-    CGFloat valueD = [[lpValues objectForKey:kStockMacPointDKey] floatValue];
-    CGFloat valueStop = [[lpValues objectForKey:kStockMacStopKey] floatValue];
-    CGFloat wave4Lowest = [[lpValues objectForKey:kStockMacWave4LowestPointKey] floatValue];
-    
-    [self.valueATextField setStringValue:[NSString stringWithFormat:@"%.f", valueA]];
-    [self.valueBTextField setStringValue:[NSString stringWithFormat:@"%.f", valueB]];
-    [self.valueCTextField setStringValue:[NSString stringWithFormat:@"%.f", valueC]];
-    [self.valueDTextField setStringValue:[NSString stringWithFormat:@"%.f", valueD]];
-    [self.stopTextField setStringValue:[NSString stringWithFormat:@"%.f", valueStop]];
-    [self.wave5PreviousLowestTextField setStringValue:[NSString stringWithFormat:@"%.f", wave4Lowest]];
+    self.valueA = [[lpValues objectForKey:kStockMacPointAKey] floatValue];
+    self.valueB = [[lpValues objectForKey:kStockMacPointBKey] floatValue];
+    self.valueC = [[lpValues objectForKey:kStockMacPointCKey] floatValue];
+    self.valueD = [[lpValues objectForKey:kStockMacPointDKey] floatValue];
+    self.valueE = [[lpValues objectForKey:kStockMacPointEKey] floatValue];
+    self.valueF = [[lpValues objectForKey:kStockMacPointFKey] floatValue];
+    self.stopValue = [[lpValues objectForKey:kStockMacStopKey] floatValue];
+    [self.waveStylePopUpButton selectItemAtIndex:[[lpValues objectForKey:kStockMacWaveStyleKey] integerValue]];
     
     return lpValues;
 }
@@ -218,24 +322,24 @@ static NSString* kUserDefaultKey = @"StockMac";
 {
     [self handleWave2Logic];
     [self handleWave3Logic];
+    [self handleWave4Logic];
+    [self handleWave5Logic];
 }
 
 - (void)handleWave2Logic
 {
-    CGFloat valueA = [[self.valueATextField stringValue] floatValue];
-    CGFloat valueB = [[self.valueBTextField stringValue] floatValue];
-    CGFloat valueC = [[self.valueCTextField stringValue] floatValue];
-    CGFloat valueD = [[self.valueDTextField stringValue] floatValue];
-    CGFloat valueStop = [[self.stopTextField stringValue] floatValue];
-    CGFloat wave4Lowest = [[self.wave5PreviousLowestTextField stringValue] floatValue];
-    
     self.valueDTooltip.hidden = YES;
     self.valueDRange.hidden = YES;
     [self.wave2Height setStringValue:[NSString stringWithFormat:@"%.2f", self.firstWaveHeight]];
     [self.wave2Back setStringValue:@"0"];
     [self.wave2BackPercent setStringValue:@"0"];
     
-    if ([[self.valueDTextField stringValue] compare:@"0"]) {
+    if (self.valueC == 0) {
+        self.valueD = 0;
+        return;
+    }
+
+    if (self.valueD == 0) {
         // only estimate wave 2 logic
         self.valueDTooltip.hidden = NO;
         self.valueDRange.hidden = NO;
@@ -244,14 +348,14 @@ static NSString* kUserDefaultKey = @"StockMac";
         NSString* lpValueDRange = nil;
         if (self.isAscending) {
             lpTooltip = @"D = 40\% ~ 80\%";
-            CGFloat min = valueC - self.firstWaveHeight * 0.8;
-            CGFloat max = valueC - self.firstWaveHeight * 0.4;
+            CGFloat min = self.valueC - self.firstWaveHeight * 0.8;
+            CGFloat max = self.valueC - self.firstWaveHeight * 0.4;
             lpValueDRange = [NSString stringWithFormat:@"%.2f ~ %.2f", min, max];
         }
         else{
             lpTooltip = @"D = 30\% ~ 95\%";
-            CGFloat min = valueC + self.firstWaveHeight * 0.95;
-            CGFloat max = valueC + self.firstWaveHeight * 0.3;
+            CGFloat min = self.valueC + self.firstWaveHeight * 0.95;
+            CGFloat max = self.valueC + self.firstWaveHeight * 0.3;
             lpValueDRange = [NSString stringWithFormat:@"%.2f ~ %.2f", min, max];
         }
         
@@ -259,7 +363,7 @@ static NSString* kUserDefaultKey = @"StockMac";
         [self.valueDRange setStringValue:lpValueDRange];
     }
     else{
-        CGFloat back = fabs(valueD - valueC);
+        CGFloat back = fabs(self.valueD - self.valueC);
         [self.wave2Back setStringValue:[NSString stringWithFormat:@"%.2f", back]];
         [self.wave2BackPercent setStringValue:[NSString stringWithFormat:@"%.2f", back/self.firstWaveHeight]];
     }
@@ -276,56 +380,52 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 - (void)handleWave3Logic
 {
-    CGFloat valueB = [[self.valueBTextField stringValue] floatValue];
-    CGFloat valueC = [[self.valueCTextField stringValue] floatValue];
-    CGFloat valueD = [[self.valueDTextField stringValue] floatValue];
-    CGFloat valueStop = [[self.stopTextField stringValue] floatValue];
-    
-    [self.valueETextField setStringValue:@"0"];
     [self.wave3Height setStringValue:@"0"];
     [self.wave3Cost setStringValue:@"0"];
     [self.wave3Profit setStringValue:@"0"];
     [self.wave3ProfitPercent setStringValue:@"0"];
     
-    if ([[self.valueDTextField stringValue] compare:@"0"]) {
+    if (self.valueD == 0) {
+        self.valueE = 0;
         return;
     }
-    else{
+
+    
+    if (self.valueE == 0) {
         // calculator target e point
-        CGFloat valueE = 0.0f;
         if (self.isAscending) {
-            valueE = valueD + kGoldPercent1618 * fabs(valueB - valueC);
+            self.valueE = self.valueD + kGoldPercent1618 * fabs(self.valueB - self.valueC);
         }
         else{
-            valueE = valueD - kGoldPercent1618 * fabs(valueB - valueC);
+            self.valueE = self.valueD - kGoldPercent1618 * fabs(self.valueB - self.valueC);
         }
-        [self.valueETextField setStringValue:[NSString stringWithFormat:@"%.2f", valueE]];
-        [self.wave3Height setStringValue:[NSString stringWithFormat:@"%.2f", kGoldPercent1618 * self.firstWaveHeight]];
-        
-        // calculator the cost and profit, percent
-        CGFloat cost = 0.0f;
-        if (self.isAscending) {
-            if (valueStop == 0) {
-                cost = valueD - valueB;
-            }
-            else{
-                cost = valueD - MIN(valueB, valueStop);
-            }
-        }
-        else{
-            if (valueStop == 0) {
-                cost = valueB - valueD;
-            }
-            else{
-                cost = valueD - MAX(valueB, valueStop);
-            }
-        }
-        
-        CGFloat profit = kGoldPercent1618 * self.firstWaveHeight;
-        [self.wave3Cost setStringValue:[NSString stringWithFormat:@"%.2f", cost]];
-        [self.wave3Profit setStringValue:[NSString stringWithFormat:@"%.2f", profit]];
-        [self.wave3ProfitPercent setStringValue:[NSString stringWithFormat:@"%.2f", profit / cost]];
     }
+    
+    [self.wave3Height setStringValue:[NSString stringWithFormat:@"%.2f", kGoldPercent1618 * self.firstWaveHeight]];
+    
+    // calculator the cost and profit, percent
+    CGFloat cost = 0.0f;
+    if (self.isAscending) {
+        if (self.stopValue == 0) {
+            cost = self.valueD - self.valueB;
+        }
+        else{
+            cost = self.valueD - MIN(self.valueB, self.stopValue);
+        }
+    }
+    else{
+        if (self.stopValue == 0) {
+            cost = self.valueB - self.valueD;
+        }
+        else{
+            cost = self.valueD - MAX(self.valueB, self.stopValue);
+        }
+    }
+    
+    CGFloat profit = kGoldPercent1618 * self.firstWaveHeight;
+    [self.wave3Cost setStringValue:[NSString stringWithFormat:@"%.2f", cost]];
+    [self.wave3Profit setStringValue:[NSString stringWithFormat:@"%.2f", profit]];
+    [self.wave3ProfitPercent setStringValue:[NSString stringWithFormat:@"%.2f", profit / cost]];
 }
 
 - (void)clearWare3Group
@@ -335,6 +435,58 @@ static NSString* kUserDefaultKey = @"StockMac";
     [self.wave3Cost setStringValue:@"0"];
     [self.wave3Profit setStringValue:@"0"];
     [self.wave3ProfitPercent setStringValue:@"0"];
+}
+
+- (void)handleWave4Logic
+{
+    [self.wave4Back setStringValue:@"0"];
+    
+    if (self.valueE == 0) {
+        self.valueF = 0;
+        return;
+    }
+    
+    // calculate the back height
+    CGFloat wave3Height = fabs(self.valueE - self.valueD);
+    if (self.valueF == 0) {
+        CGFloat min = 0;
+        CGFloat max = 0;
+        if (self.isAscending) {
+            min = self.valueE - wave3Height * 0.7;
+            max = self.valueE - wave3Height * 0.3;
+        }
+        else{
+            min = self.valueE + wave3Height * 0.3;
+            max = self.valueE + wave3Height * 0.7;
+        }
+        
+        [self.wave4Back setStringValue:[NSString stringWithFormat:@"[%.f, %.f]", min, max]];
+    }
+    else{
+        CGFloat back = fabs(self.valueF - self.valueE);
+        [self.wave4Back setStringValue:[NSString stringWithFormat:@"%.f (%.f%%)", back, back / wave3Height * 100]];
+    }
+}
+
+- (void)clearWave4Group
+{
+    self.valueF = 0;
+    [self.wave4Back setStringValue:@"0"];
+}
+
+- (void)handleWave5Logic
+{
+    // not setting wave style, so here we only calculate min and max G value
+    if (self.waveStyle == 0) {
+        
+    }
+    
+    
+}
+
+- (void)clearWave5Group
+{
+    
 }
 
 #pragma mark - Run Gold Percent Logic
