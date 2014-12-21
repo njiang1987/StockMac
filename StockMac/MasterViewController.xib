@@ -697,7 +697,7 @@
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                         </textFieldCell>
                                                                     </textField>
-                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="UJ2-G9-c7M">
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="UJ2-G9-c7M">
                                                                         <rect key="frame" x="179" y="14" width="72" height="46"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit Percent" id="9tU-cm-OmS">
@@ -791,7 +791,7 @@
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                         </textFieldCell>
                                                                     </textField>
-                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="TXF-Rg-kGG">
+                                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="TXF-Rg-kGG">
                                                                         <rect key="frame" x="179" y="14" width="72" height="46"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" title="Profit Percent" id="vVk-tc-6LU">
