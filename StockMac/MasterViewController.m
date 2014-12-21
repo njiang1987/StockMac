@@ -367,8 +367,8 @@ static NSString* kUserDefaultKey = @"StockMac";
     else{
         CGFloat back = fabs(self.valueD - self.valueC);
         [self.wave2Back setStringValue:[NSString stringWithFormat:@"%.2f", back]];
-        [self.wave2BackPercent setStringValue:[NSString stringWithFormat:@"%.2f", back/self.firstWaveHeight]];
-        [self.valueDRange setStringValue:@""];
+        [self.wave2BackPercent setStringValue:[NSString stringWithFormat:@"%.f%%", back/self.firstWaveHeight * 100]];
+        [self.valueDRange setStringValue:[NSString stringWithFormat:@"%.f%%", back/self.firstWaveHeight * 100]];
     }
 }
 
@@ -463,7 +463,7 @@ static NSString* kUserDefaultKey = @"StockMac";
             max = self.valueE + wave3Height * 0.7;
         }
         
-        [self.wave4Back setStringValue:[NSString stringWithFormat:@"[%.f, %.f]", min, max]];
+        [self.wave4Back setStringValue:[NSString stringWithFormat:@"%.f | %.f", min, max]];
     }
     else{
         CGFloat back = fabs(self.valueF - self.valueE);
@@ -540,7 +540,7 @@ static NSString* kUserDefaultKey = @"StockMac";
     
     [self.wave5Cost setStringValue:[NSString stringWithFormat:@"%.f", lMaxLoss]];
     [self.wave5Profit setStringValue:[NSString stringWithFormat:@"%.f", lMinProfit]];
-    [self.wave5ProfitPercent setStringValue:[NSString stringWithFormat:@"%.f", lMinProfit/lMaxLoss]];
+    [self.wave5ProfitPercent setStringValue:[NSString stringWithFormat:@"%.2f", lMinProfit/lMaxLoss]];
 }
 
 - (void)clearWave5Group
@@ -602,6 +602,16 @@ static NSString* kUserDefaultKey = @"StockMac";
     [self.lower382 setStringValue:[NSString stringWithFormat:@"%.2f", lValue382]];
     [self.lower618 setStringValue:[NSString stringWithFormat:@"%.2f", lValue618]];
     [self.lower809 setStringValue:[NSString stringWithFormat:@"%.2f", lValue809]];
+}
+
+#pragma mark - NSTextFieldDelegate
+- (void)controlTextDidEndEditing:(NSNotification *)obj
+{
+    id lpControl = [obj object];
+    if (lpControl == self.valueBTextField) {
+        NSString* lpValueB = [self.valueBTextField stringValue];
+        self.stopValue = [lpValueB floatValue];
+    }
 }
 
 

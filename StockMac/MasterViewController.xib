@@ -469,6 +469,9 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" red="0.79820315659999996" green="1" blue="0.82416386559999999" alpha="1" colorSpace="calibratedRGB"/>
                                         </textFieldCell>
+                                        <connections>
+                                            <outlet property="delegate" destination="-2" id="lbL-0y-36B"/>
+                                        </connections>
                                     </textField>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="HR5-nq-gRF">
                                         <rect key="frame" x="191" y="389" width="26" height="22"/>
@@ -697,7 +700,7 @@
                                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Xvg-bN-xIQ">
                                                                         <rect key="frame" x="18" y="12" width="151" height="23"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" drawsBackground="YES" id="ei5-ZL-o6F">
+                                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="border" alignment="center" drawsBackground="YES" id="ei5-ZL-o6F">
                                                                             <font key="font" metaFont="system" size="16"/>
                                                                             <color key="textColor" red="1" green="0.14645393549999999" blue="0.2164003018" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -906,7 +909,7 @@
                                             <rect key="frame" x="1" y="80" width="166" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="mCQ-Ki-WrR">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="0.70769230769230773" horizontal="NO" id="mCQ-Ki-WrR">
                                             <rect key="frame" x="167" y="1" width="15" height="79"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
