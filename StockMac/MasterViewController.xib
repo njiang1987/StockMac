@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6750" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6750"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MasterViewController">
             <connections>
+                <outlet property="atrTextField" destination="Hoo-kN-Zn5" id="Kqm-cI-dqY"/>
+                <outlet property="cashUnitLabel" destination="2Ws-LQ-DbW" id="39W-QK-4aI"/>
                 <outlet property="highLow191" destination="RxN-sI-GnT" id="oHc-Xq-eIb"/>
                 <outlet property="highLow382" destination="Syn-oD-y1Q" id="Leh-7K-EGu"/>
                 <outlet property="highLow618" destination="Dze-Ya-IRP" id="Xod-at-GfL"/>
@@ -14,6 +16,7 @@
                 <outlet property="higher382" destination="ssJ-7w-feR" id="bd3-Ye-kjK"/>
                 <outlet property="higher618" destination="293-2j-N4r" id="QVB-X6-2sX"/>
                 <outlet property="higher809" destination="IKj-Ue-Hnu" id="1ki-go-RjR"/>
+                <outlet property="losePercentTextField" destination="POY-gt-yKP" id="oLh-A1-I5S"/>
                 <outlet property="lower191" destination="tow-La-h44" id="VJr-Mc-6JL"/>
                 <outlet property="lower382" destination="mFs-0a-BNv" id="13b-Kb-KIR"/>
                 <outlet property="lower618" destination="ewA-mK-fZb" id="rss-gm-Ytb"/>
@@ -21,6 +24,7 @@
                 <outlet property="maxTextField" destination="Mni-Gf-UdV" id="ufh-Ot-WZz"/>
                 <outlet property="midTextField" destination="1GO-xX-4Ig" id="jGA-C6-Kqv"/>
                 <outlet property="minTextField" destination="ZtA-Jh-ujY" id="H9l-Hg-3cm"/>
+                <outlet property="moneyTextField" destination="fpY-P1-lot" id="VEj-QJ-tEJ"/>
                 <outlet property="rangeTextField" destination="sHc-zc-qLx" id="ZC7-97-8yo"/>
                 <outlet property="stopValueTextField" destination="nNL-X5-xry" id="ROU-Jc-DiC"/>
                 <outlet property="tabView" destination="rY7-57-XQW" id="kt4-bT-CyV"/>
@@ -909,11 +913,91 @@
                                             <rect key="frame" x="1" y="80" width="166" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="0.70769230769230773" horizontal="NO" id="mCQ-Ki-WrR">
+                                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="0.97468354430379744" horizontal="NO" id="mCQ-Ki-WrR">
                                             <rect key="frame" x="167" y="1" width="15" height="79"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
+                                </subviews>
+                            </view>
+                        </tabViewItem>
+                        <tabViewItem label="Loss" identifier="" id="zCq-6C-3tk">
+                            <view key="view" id="Jdg-SC-uf3">
+                                <rect key="frame" x="10" y="33" width="394" height="415"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="2JI-fu-pNx">
+                                        <rect key="frame" x="48" y="383" width="20" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="M:" id="5jM-aF-52J">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="psL-cu-Atf">
+                                        <rect key="frame" x="48" y="346" width="56" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Percent:" id="26F-8e-aBI">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField verticalHuggingPriority="750" id="fpY-P1-lot">
+                                        <rect key="frame" x="109" y="378" width="96" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="EZr-5E-zDw">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField verticalHuggingPriority="750" id="POY-gt-yKP">
+                                        <rect key="frame" x="117" y="343" width="96" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DHp-HA-Sot">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField verticalHuggingPriority="750" id="Hoo-kN-Zn5">
+                                        <rect key="frame" x="103" y="308" width="96" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="lyY-1W-iuA">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ONG-3g-raX">
+                                        <rect key="frame" x="36" y="198" width="65" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="CashUnit:" id="vnp-Te-EZU">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="2Ws-LQ-DbW">
+                                        <rect key="frame" x="115" y="198" width="149" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="1go-Cy-NK1">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="p8R-7u-dZg">
+                                        <rect key="frame" x="48" y="313" width="33" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="ATR:" id="q6Q-Ph-gLg">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
                                 </subviews>
                             </view>
                         </tabViewItem>

@@ -25,6 +25,7 @@ static NSString* kStockMacPointEKey = @"StockMac.E";
 static NSString* kStockMacPointFKey = @"StockMac.F";
 static NSString* kStockMacStopKey   = @"StockMac.Stop";
 static NSString* kStockMacWaveStyleKey = @"StockMac.WaveStyle";
+static NSString* kStockMacLosePercentKey = @"StockMac.LosePercent";
 static NSString* kUserDefaultKey = @"StockMac";
 
 @interface MasterViewController ()
@@ -101,6 +102,12 @@ static NSString* kUserDefaultKey = @"StockMac";
 @property (assign) CGFloat valueF;
 @property (assign) CGFloat stopValue;
 @property (assign) NSInteger waveStyle;
+
+// Tab3 - Loss
+@property (weak) IBOutlet NSTextField *moneyTextField;
+@property (weak) IBOutlet NSTextField *losePercentTextField;
+@property (weak) IBOutlet NSTextField *atrTextField;
+@property (weak) IBOutlet NSTextField *cashUnitLabel;
 
 @end
 
@@ -235,7 +242,8 @@ static NSString* kUserDefaultKey = @"StockMac";
 
 - (void)runCalculator
 {
-    if (self.tabView.selectedTabViewItem == [self.tabView tabViewItemAtIndex:0]) {
+    if (self.tabView.selectedTabViewItem == [self.tabView tabViewItemAtIndex:0])
+    {
         // run gold logic
         CGFloat a = [[self.minTextField stringValue] floatValue];
         CGFloat b = [[self.maxTextField stringValue] floatValue];
@@ -250,12 +258,18 @@ static NSString* kUserDefaultKey = @"StockMac";
         [self setLowerGroupValueMin:lMin max:lMax];
         
     }
-    else if (self.tabView.selectedTabViewItem == [self.tabView tabViewItemAtIndex:1]){
+    else if (self.tabView.selectedTabViewItem == [self.tabView tabViewItemAtIndex:1])
+    {
         // run wave logic
         [self runWaveLogic];
-        
-        [self storeRequiredValue];
     }
+    else if (self.tabView.selectedTabViewItem == [self.tabView tabViewItemAtIndex:2])
+    {
+        [self runCalculateLoseLogic];
+    }
+    
+    // store the default value into user defaults
+    [self storeRequiredValue];
 }
 
 - (void)clearCalculator
@@ -290,6 +304,7 @@ static NSString* kUserDefaultKey = @"StockMac";
     CGFloat valueF = self.valueF;
     CGFloat stopValue = self.stopValue;
     CGFloat waveStyle = [self.waveStylePopUpButton indexOfItem:self.waveStylePopUpButton.selectedItem];
+    CGFloat losePercent = [self.losePercentTextField floatValue];
     
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* keys = @{kStockMacPointAKey: @(valueA),
@@ -299,7 +314,8 @@ static NSString* kUserDefaultKey = @"StockMac";
                            kStockMacPointEKey: @(valueE),
                            kStockMacPointFKey: @(valueF),
                            kStockMacStopKey: @(stopValue),
-                           kStockMacWaveStyleKey: @(waveStyle)};
+                           kStockMacWaveStyleKey: @(waveStyle),
+                           kStockMacLosePercentKey: @(losePercent)};
     [defaults setObject:keys forKey:kUserDefaultKey];
 }
 
@@ -316,6 +332,9 @@ static NSString* kUserDefaultKey = @"StockMac";
     self.valueF = [[lpValues objectForKey:kStockMacPointFKey] floatValue];
     self.stopValue = [[lpValues objectForKey:kStockMacStopKey] floatValue];
     [self.waveStylePopUpButton selectItemAtIndex:[[lpValues objectForKey:kStockMacWaveStyleKey] integerValue]];
+    
+    CGFloat losePercent = [[lpValues objectForKey:kStockMacLosePercentKey] floatValue];
+    [self.losePercentTextField setStringValue:[NSString stringWithFormat:@"%.f", losePercent]];
     
     return lpValues;
 }
@@ -602,6 +621,30 @@ static NSString* kUserDefaultKey = @"StockMac";
     [self.lower382 setStringValue:[NSString stringWithFormat:@"%.2f", lValue382]];
     [self.lower618 setStringValue:[NSString stringWithFormat:@"%.2f", lValue618]];
     [self.lower809 setStringValue:[NSString stringWithFormat:@"%.2f", lValue809]];
+}
+
+#pragma mark - Run Lose Logic
+- (void)runCalculateLoseLogic
+{
+    CGFloat money = [self.moneyTextField floatValue];
+    CGFloat percent = [self.losePercentTextField floatValue] / 100;
+    CGFloat atr = [self.atrTextField floatValue];
+    
+    if (money <= 0 || percent <= 0 || atr <= 0)
+    {
+        NSAlert* alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"OK"];
+        [alert setMessageText:@"Error"];
+        [alert setInformativeText:@"Money|losepercent|art can not be 0!"];
+        [alert setAlertStyle:NSWarningAlertStyle];
+        
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
+            return;
+        }
+    }
+    
+    NSInteger cashunit = (NSInteger)((money * percent) / atr);
+    [self.cashUnitLabel setStringValue:[NSString stringWithFormat:@"%ld", cashunit]];
 }
 
 #pragma mark - NSTextFieldDelegate
